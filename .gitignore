@@ -1,4 +1,5 @@
 venv/
+.env
 
 # Ignorar arquivos de configuração do IDE
 *.pyc
