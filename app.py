@@ -1,15 +1,13 @@
+#app.py
 from flask import Flask, request, jsonify
-from config.db import client, db  # Importa a conexão com o banco de dados
+from config.db import initialize_db 
 from models.ia_data import IAData
 from datetime import datetime
-from dotenv import load_dotenv
-import os
-from mongoengine import connect
-load_dotenv()
-MONGO_URI = os.getenv("MONGO_URI")
-connect(host=MONGO_URI)
 
 app = Flask(__name__)
+
+initialize_db()
+
 @app.route('/')
 def index():
     return "Bem vindo ao Flask"
@@ -35,6 +33,15 @@ def create_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
+@app.route('/datas', methods=['GET'])
+def get_data():
+    try:
+        dados = IAData.objects()  # Recupera todos os documentos da coleção
+        dados_lista = [dado.as_dict() for dado in dados]  # Usa o método as_dict()
+        return jsonify(dados_lista), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
