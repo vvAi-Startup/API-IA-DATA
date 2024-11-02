@@ -7,6 +7,13 @@ import os
 import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
 import io
+from pydub import AudioSegment
+
+import subprocess
+
+def convert_mp3_to_wav(file_path):
+    pass
+
 
 # Função para carregar e processar o arquivo de áudio
 def audio_to_spectrogram(file_path, max_length=128):
