@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 import io
 
 # Função para criar e salvar a imagem da forma de onda do áudio
-def create_waveform_image(file_path):
+def create_waveform_image(file_path, output_dir='uploads/waveforms/'):
     y, sr = librosa.load(file_path, sr=None)
     plt.figure(figsize=(6, 2))
     plt.plot(np.linspace(0, len(y) / sr, num=len(y)), y)
@@ -15,11 +15,9 @@ def create_waveform_image(file_path):
     plt.ylabel('Amplitude')
     plt.grid()
     
-    # Salvar a imagem em um objeto BytesIO
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0)
+    # Salvar a imagem no diretório
+    output_path = f'{output_dir}{file_path.split("/")[-1]}.png'
+    plt.savefig(output_path, format='png', bbox_inches='tight', pad_inches=0)
     plt.close()
     
-    buf.seek(0)
-    image = Image.open(buf)
-    return ImageTk.PhotoImage(image)
+    return output_path

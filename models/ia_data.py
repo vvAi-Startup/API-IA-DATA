@@ -9,6 +9,7 @@ class IAData(me.Document):
     data_identificacao = me.DateField(default=lambda: datetime.now(timezone.utc).date())
     horario_identificacao = me.DateTimeField(default=lambda: datetime.now(timezone.utc))
     tempo_resposta = me.FloatField(required=True)
+    nome_audio = me.StringField(required=True)
 
     def as_dict(self):
         return {
@@ -16,6 +17,7 @@ class IAData(me.Document):
                 "data_identificacao": self.data_identificacao,
                 "horario_identificacao": self.horario_identificacao,
                 "tempo_resposta": self.tempo_resposta,
+                "nome_audio": self.nome_audio,
             }
     
     meta = {

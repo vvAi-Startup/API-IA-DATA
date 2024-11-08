@@ -2,11 +2,9 @@
 import librosa
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image, ImageTk
-import io
 
 # Função para criar e salvar a imagem do espectrograma
-def create_spectrogram_image(file_path):
+def create_spectrogram_image(file_path, output_dir='uploads/spectrograms/'):
     y, sr = librosa.load(file_path, sr=None)
     spectrogram = librosa.feature.melspectrogram(y=y, sr=sr)
     
@@ -23,10 +21,8 @@ def create_spectrogram_image(file_path):
     plt.axis('off')
     
     # Salvar a imagem em um objeto BytesIO
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0)
+    output_path = f'{output_dir}{file_path.split("/")[-1]}.png'
+    plt.savefig(output_path, format='png', bbox_inches='tight', pad_inches=0)
     plt.close()
     
-    buf.seek(0)
-    image = Image.open(buf)
-    return ImageTk.PhotoImage(image)
+    return output_path
