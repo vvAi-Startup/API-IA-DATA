@@ -1,64 +1,45 @@
-from tkinter import filedialog, messagebox
 from .predict_audio import predict_audio
 from .create_spectrogram_image import create_spectrogram_image
 from .create_waveform_image import create_waveform_image
+import io
+import base64
+from PIL import Image
 
-def open_file(result_label, spectrogram_label, waveform_label):
+def open_file(file):
+    """
+    Função que recebe um arquivo de áudio enviado pelo frontend,
+    faz a predição e gera as imagens do espectrograma e da forma de onda,
+    e retorna os resultados em formato JSON.
+    """
     try:
-        file_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.wav")])
-        if file_path:
-            print(f'Arquivo selecionado: {file_path}')
-            result = predict_audio(file_path)
-            if result:
-                result_label.config(text=f'Classificação: {result}')
-                
-                # Criar e exibir a imagem do espectrograma
-                spectrogram_img = create_spectrogram_image(file_path)
-                if spectrogram_img:
-                    spectrogram_label.config(image=spectrogram_img)
-                    spectrogram_label.image = spectrogram_img  # Mantenha uma referência da imagem
-                
-                # Criar e exibir a imagem da forma de onda
-                waveform_img = create_waveform_image(file_path)
-                if waveform_img:
-                    waveform_label.config(image=waveform_img)
-                    waveform_label.image = waveform_img  # Mantenha uma referência da imagem
-            else:
-                result_label.config(text='Erro ao fazer a previsão.')
+        # Salvar o arquivo temporariamente (se necessário)
+        file_path = "/tmp/" + file.filename
+        file.save(file_path)
+
+        # 1. Fazer a predição do áudio
+        result = predict_audio(file_path)
+
+        # 2. Gerar o espectrograma como imagem
+        spectrogram_img = create_spectrogram_image(file_path)
+        spectrogram_img_io = io.BytesIO()
+        spectrogram_img.save(spectrogram_img_io, format="PNG")
+        spectrogram_img_io.seek(0)
+        spectrogram_base64 = base64.b64encode(spectrogram_img_io.getvalue()).decode("utf-8")
+
+        # 3. Gerar a forma de onda como imagem
+        waveform_img = create_waveform_image(file_path)
+        waveform_img_io = io.BytesIO()
+        waveform_img.save(waveform_img_io, format="PNG")
+        waveform_img_io.seek(0)
+        waveform_base64 = base64.b64encode(waveform_img_io.getvalue()).decode("utf-8")
+
+        # 4. Retornar os resultados em formato JSON
+        return {
+            "predicted_class": result,  # A predição do áudio
+            "spectrogram": spectrogram_base64,  # Spectrograma em base64
+            "waveform": waveform_base64  # Forma de onda em base64
+        }
+
     except Exception as e:
-        print(f"Erro ao abrir o arquivo: {e}")
-        messagebox.showerror("Erro", f"Erro ao abrir o arquivo: {e}")
-
-
-# #modelo/views/open_file
-# from tkinter import filedialog, messagebox
-# from .predict_audio import predict_audio
-# from .create_spectrogram_image import create_spectrogram_image
-# from .create_waveform_image import create_waveform_image
-
-# # Função chamada quando o botão de abrir arquivo é clicado
-# def open_file():
-#     try:
-#         file_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.wav")])
-#         if file_path:
-#             print(f'Arquivo selecionado: {file_path}')
-#             result = predict_audio(file_path)
-#             if result:
-#                 result_label.config(text=f'Classificação: {result}')
-                
-#                 # Criar e exibir a imagem do espectrograma
-#                 spectrogram_img = create_spectrogram_image(file_path)
-#                 if spectrogram_img:
-#                     spectrogram_label.config(image=spectrogram_img)
-#                     spectrogram_label.image = spectrogram_img  # Mantenha uma referência da imagem
-                
-#                 # Criar e exibir a imagem da forma de onda
-#                 waveform_img = create_waveform_image(file_path)
-#                 if waveform_img:
-#                     waveform_label.config(image=waveform_img)
-#                     waveform_label.image = waveform_img  # Mantenha uma referência da imagem
-#             else:
-#                 result_label.config(text='Erro ao fazer a previsão.')
-#     except Exception as e:
-#         print(f"Erro ao abrir o arquivo: {e}")
-#         messagebox.showerror("Erro", f"Erro ao abrir o arquivo: {e}")
+        # Retornar erro em caso de falha
+        return {"error": str(e)}
