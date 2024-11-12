@@ -2,12 +2,31 @@
 from flask import Blueprint, request, jsonify
 from models.ia_data import IAData
 from datetime import datetime
+from modelo.views.open_file import open_file  # Importar a função que processa o arquivo
 
 ia_data_blue_print = Blueprint('ia_data', __name__)
 
 @ia_data_blue_print.route('/insert_audio', methods=['POST'])
 def insert_audio():
-    pass
+    if 'audio' not in request.files:
+        return jsonify({"error": "Nenhum arquivo de áudio enviado."}), 400
+
+    file = request.files['audio']
+    
+    if file.filename == '':
+        return jsonify({"error": "Nenhum arquivo selecionado."}), 400
+
+    try:
+        # Chama a função que processa o arquivo de áudio
+        result = open_file(file)
+        
+        # Verifica se o resultado contém um erro
+        if "error" in result:
+            return jsonify(result), 500
+        
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @ia_data_blue_print.route('/create_data', methods=['POST'])
