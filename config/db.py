@@ -10,12 +10,11 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 def initialize_db():
     """Inicializa a conexão com o banco de dados MongoDB."""
-    connect(host=MONGO_URI)
-    print('Conectado ao MongoDB com sucesso!')
-
-
-
-# # Criar uma conexão com o MongoDB
-# client = MongoClient(MONGO_URI)
-# db = client.get_default_database()  # Obtém o banco de dados padrão
-# print('Conectado ao Mongo com Sucesso!')
+    if not MONGO_URI:
+        print("Erro: A variável de ambiente MONGO_URI não foi definida.")
+        return
+    try:
+        connect(host=MONGO_URI)
+        print('Conectado ao MongoDB com sucesso!')
+    except Exception as e:
+        print(f'Erro de conexão: {e}')
