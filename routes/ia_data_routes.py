@@ -21,9 +21,10 @@ def insert_audio():
     try:
         # Passa o arquivo para a função de análise e processamento
         analysis_results = open_file(file)
-        
+        print("Resultados da análise:", analysis_results)
         # Verifique se ocorreu algum erro na análise
         if "error" in analysis_results:
+            print('Erro durante a análise:', analysis_results["error"])
             return jsonify({"error": analysis_results["error"]}), 500
         
         # Retorna a análise em formato JSON
@@ -33,6 +34,7 @@ def insert_audio():
         }), 200
     
     except Exception as e:
+        print(f'erro: {e}')
         return jsonify({"error": str(e)}), 500
 
 

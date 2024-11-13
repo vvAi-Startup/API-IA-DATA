@@ -10,6 +10,11 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 def initialize_db():
     """Inicializa a conexão com o banco de dados MongoDB."""
+    # connect(host='mongodb://localhost:27017/calm-wave')
+    # if connect:
+    #     print('conectado')
+    # else:
+    #     print('porra')
     if not MONGO_URI:
         print("Erro: A variável de ambiente MONGO_URI não foi definida.")
         return

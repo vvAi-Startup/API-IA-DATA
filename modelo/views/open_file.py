@@ -3,7 +3,8 @@ from .create_spectrogram_image import create_spectrogram_image
 from .create_waveform_image import create_waveform_image
 import io
 import base64
-from PIL import Image
+import tempfile
+import os
 
 def open_file(file):
     """
@@ -12,8 +13,9 @@ def open_file(file):
     e retorna os resultados em formato JSON.
     """
     try:
-        # Salvar o arquivo temporariamente (se necessário)
-        file_path = "/tmp/" + file.filename
+       # Usando o diretório temporário do sistema (Windows ou Linux)
+        temp_dir = tempfile.gettempdir()  # Diretório temporário do sistema
+        file_path = os.path.join(temp_dir, file.filename)
         file.save(file_path)
 
         # 1. Fazer a predição do áudio
