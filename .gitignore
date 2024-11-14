@@ -1,5 +1,7 @@
 venv/
 .env
+uploads/spectrograms
+uploads/waveforms
 
 # Ignorar arquivos de configuração do IDE
 *.pyc

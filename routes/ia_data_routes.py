@@ -3,6 +3,8 @@ from flask import Blueprint, request, jsonify
 from models.ia_data import IAData
 from datetime import datetime
 from modelo.views.open_file import open_file
+from bson import ObjectId
+
 
 ia_data_blue_print = Blueprint('ia_data', __name__)
 
@@ -66,5 +68,24 @@ def get_data():
         dados = IAData.objects()  # Recupera todos os documentos da coleção
         dados_lista = [dado.as_dict() for dado in dados]  # Usa o método as_dict()
         return jsonify(dados_lista), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+@ia_data_blue_print.route('/data/<id>', methods=['GET'])
+def get_data_by_id(id):
+    try:
+        # Converte o id para ObjectId
+        if not ObjectId.is_valid(id):
+            return jsonify({"error": "ID inválido"}), 400
+        
+        # Busca o documento pelo _id
+        dado = IAData.objects(_id=ObjectId(id)).first()  # Retorna o primeiro documento com o _id fornecido
+        
+        if dado is None:
+            return jsonify({"error": "Dado não encontrado"}), 404
+        
+        # Converte o documento para um dicionário
+        return jsonify(dado.as_dict()), 200
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 400

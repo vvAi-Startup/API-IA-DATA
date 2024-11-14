@@ -23,17 +23,23 @@ def open_file(file):
 
         # 2. Gerar o espectrograma como imagem
         spectrogram_img = create_spectrogram_image(file_path)
-        spectrogram_img_io = io.BytesIO()
-        spectrogram_img.save(spectrogram_img_io, format="PNG")
-        spectrogram_img_io.seek(0)
-        spectrogram_base64 = base64.b64encode(spectrogram_img_io.getvalue()).decode("utf-8")
+        with open(spectrogram_img, "rb") as spectrogram_file:
+            spectrogram_base64 = base64.b64encode(spectrogram_file.read()).decode("utf-8")
+        # spectrogram_img = create_spectrogram_image(file_path)
+        # spectrogram_img_io = io.BytesIO()
+        # spectrogram_img.save(spectrogram_img_io, format="PNG")
+        # spectrogram_img_io.seek(0)
+        # spectrogram_base64 = base64.b64encode(spectrogram_img_io.getvalue()).decode("utf-8")
 
         # 3. Gerar a forma de onda como imagem
         waveform_img = create_waveform_image(file_path)
-        waveform_img_io = io.BytesIO()
-        waveform_img.save(waveform_img_io, format="PNG")
-        waveform_img_io.seek(0)
-        waveform_base64 = base64.b64encode(waveform_img_io.getvalue()).decode("utf-8")
+        with open(waveform_img, "rb") as waveform_file:
+            waveform_base64 = base64.b64encode(waveform_file.read()).decode("utf-8")
+        # waveform_img = create_waveform_image(file_path)
+        # waveform_img_io = io.BytesIO()
+        # waveform_img.save(waveform_img_io, format="PNG")
+        # waveform_img_io.seek(0)
+        # waveform_base64 = base64.b64encode(waveform_img_io.getvalue()).decode("utf-8")
 
         # 4. Retornar os resultados em formato JSON
         return {
