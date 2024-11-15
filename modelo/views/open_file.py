@@ -1,8 +1,4 @@
 from .predict_audio import predict_audio
-from .create_spectrogram_image import create_spectrogram_image
-from .create_waveform_image import create_waveform_image
-import io
-import base64
 import tempfile
 import os
 
@@ -24,37 +20,23 @@ def open_file(file):
         if "error" in result:
             return result
         
-        saved_id = result.get("saved_id")
+        # saved_id = result.get("saved_id")
 
-        # 2. Gerar o espectrograma como imagem
-        spectrogram_img = create_spectrogram_image(file_path)
-        with open(spectrogram_img, "rb") as spectrogram_file:
-            spectrogram_base64 = base64.b64encode(spectrogram_file.read()).decode("utf-8")
-        # spectrogram_img = create_spectrogram_image(file_path)
-        # spectrogram_img_io = io.BytesIO()
-        # spectrogram_img.save(spectrogram_img_io, format="PNG")
-        # spectrogram_img_io.seek(0)
-        # spectrogram_base64 = base64.b64encode(spectrogram_img_io.getvalue()).decode("utf-8")
-
-        # 3. Gerar a forma de onda como imagem
-        # waveform_img = create_waveform_image(file_path)
-        # with open(waveform_img, "rb") as waveform_file:
-        #     waveform_base64 = base64.b64encode(waveform_file.read()).decode("utf-8")
-            
-        # waveform_img = create_waveform_image(file_path)
-        # waveform_img_io = io.BytesIO()
-        # waveform_img.save(waveform_img_io, format="PNG")
-        # waveform_img_io.seek(0)
-        # waveform_base64 = base64.b64encode(waveform_img_io.getvalue()).decode("utf-8")
-
-        # 4. Retornar os resultados em formato JSON
         return {
-            "predicted_class": result,  # A predição do áudio
-            "tempo_resposta": result["tempo_resposta"],  # Tempo de resposta da predição
-            "saved_id": saved_id,  # ID do dado salvo no banco
-            "spectrogram": spectrogram_base64,  # Spectrograma em base64
-            # "waveform": waveform_base64  # Forma de onda em base64
+            "predicted_class": result["predicted_class"],  # Classe prevista
+            "tempo_resposta": result["tempo_resposta"],    # Tempo de resposta
+            "saved_id": result["saved_id"],                # ID salvo no banco
+            "spectrogram_base64": result["spectrogram_base64"],  # Spectrograma em base64
+            "waveform_base64": result["waveform_base64"],        # Forma de onda em base64
+            "audio_vector": result["audio_vector"],
         }
+        # return {
+        #     "predicted_class": result,  # A predição do áudio
+        #     "tempo_resposta": result["tempo_resposta"],  # Tempo de resposta da predição
+        #     "saved_id": saved_id,  # ID do dado salvo no banco
+        #     "spectrogram": spectrogram_base64,  # Spectrograma em base64
+        #     # "waveform": waveform_base64  # Forma de onda em base64
+        # }
 
     except Exception as e:
         # Retornar erro em caso de falha

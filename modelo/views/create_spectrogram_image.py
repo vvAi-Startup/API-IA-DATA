@@ -3,6 +3,7 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import base64
 
 # Função para criar e salvar a imagem do espectrograma
 def create_spectrogram_image(file_path, output_dir='uploads/spectrograms/'):
@@ -32,5 +33,9 @@ def create_spectrogram_image(file_path, output_dir='uploads/spectrograms/'):
     # Salvar a imagem em um objeto BytesIO
     plt.savefig(output_path, format='png', bbox_inches='tight', pad_inches=0)
     plt.close()
+
+     # Converter a imagem salva para base64
+    with open(output_path, "rb") as image_file:
+        base64_image = base64.b64encode(image_file.read()).decode('utf-8')
     
-    return output_path
+    return output_path, base64_image

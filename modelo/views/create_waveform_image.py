@@ -3,6 +3,7 @@ import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import base64
 
 # Função para criar e salvar a imagem da forma de onda do áudio
 def create_waveform_image(file_path, output_dir='uploads/waveforms/'):
@@ -30,5 +31,13 @@ def create_waveform_image(file_path, output_dir='uploads/waveforms/'):
         print(f"Erro ao salvar a imagem da forma de onda: {e}")
 
     plt.close()
+
+     # Converter a imagem salva para base64
+    try:
+        with open(output_path, "rb") as image_file:
+            base64_image = base64.b64encode(image_file.read()).decode('utf-8')
+    except Exception as e:
+        print(f"Erro ao converter a imagem da forma de onda para base64: {e}")
+        base64_image = None
     
-    return output_path
+    return output_path, base64_image
