@@ -31,7 +31,12 @@ def create_waveform_image(file_path, output_dir='uploads/waveforms/'):
 
     plt.close()
 
-     # Converter a imagem salva para base64
+    # Verifique se a imagem foi salva corretamente
+    if not os.path.exists(output_path):
+        print(f"Imagem não salva corretamente no caminho: {output_path}")
+        return None
+
+    # Converter a imagem salva para base64
     try:
         with open(output_path, "rb") as image_file:
             base64_image = base64.b64encode(image_file.read()).decode('utf-8')

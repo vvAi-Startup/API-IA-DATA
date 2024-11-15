@@ -39,12 +39,9 @@ def predict_audio(file_path):
         predicted_class = classes[np.argmax(prediction)]
 
         # Criar imagens e obter base64
-        # spectrogram_path, spectrogram_base64 = create_spectrogram_image(file_path)
-        # waveform_path, waveform_base64 = create_waveform_image(file_path)
-
-        # Criar imagens e obter base64
-        spectrogram_base64 = create_spectrogram_image(file_path)
-        waveform_base64 = create_waveform_image(file_path)
+        spectrogram_path, spectrogram_base64 = create_spectrogram_image(file_path)
+        waveform_path, waveform_base64 = create_waveform_image(file_path)
+     
 
         # Simular vetor do áudio convertido (adapte para seu caso)
         # audio_vector = spectrogram.flatten().tolist()
@@ -54,9 +51,9 @@ def predict_audio(file_path):
                 predicted_class,
                 tempo_resposta,
                 file_path.split('/')[-1],
-                audio_base64,
                 spectrogram_base64,
-                waveform_base64
+                waveform_base64,
+                audio_base64,
                 )
 
             

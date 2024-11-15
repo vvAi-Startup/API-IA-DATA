@@ -34,8 +34,15 @@ def create_spectrogram_image(file_path, output_dir='uploads/spectrograms/'):
     plt.savefig(output_path, format='png', bbox_inches='tight', pad_inches=0)
     plt.close()
 
+    # Verificação se a imagem foi salva corretamente
+    if not os.path.exists(output_path):
+        raise Exception(f"Erro ao salvar a imagem do espectrograma no caminho: {output_path}")
+
      # Converter a imagem salva para base64
     with open(output_path, "rb") as image_file:
         base64_image = base64.b64encode(image_file.read()).decode('utf-8')
+    
+    if not base64_image:
+        raise Exception("Erro ao converter a imagem para base64.")
     
     return output_path, base64_image
