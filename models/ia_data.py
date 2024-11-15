@@ -10,14 +10,21 @@ class IAData(me.Document):
     horario_identificacao = me.DateTimeField(default=lambda: datetime.now(timezone.utc))
     tempo_resposta = me.FloatField(required=True)
     nome_audio = me.StringField(required=True)
+    spectrograma_cripto = me.StringField(required=True)    
+    waveform_cripto = me.StringField(required=True)
+    vetor_audio = me.StringField(required=False)    
 
     def as_dict(self):
         return {
+                "id": str(self.id),
                 "tipo_ruido": self.tipo_ruido,
                 "data_identificacao": self.data_identificacao,
                 "horario_identificacao": self.horario_identificacao,
                 "tempo_resposta": self.tempo_resposta,
                 "nome_audio": self.nome_audio,
+                "espectrograma": self.spectrograma_cripto,
+                "forma_de_onda": self.waveform_cripto,
+                "vetor_audio": self.vetor_audio
             }
     
     meta = {

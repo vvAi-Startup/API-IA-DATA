@@ -28,11 +28,11 @@ def predict_audio(file_path):
         predicted_class = classes[np.argmax(prediction)]
         
         try:
-            save_prediction_to_db(predicted_class, tempo_resposta, file_path.split('/')[-1])
+           saved_id = save_prediction_to_db(predicted_class, tempo_resposta, file_path.split('/')[-1])
+           print(f"Predição salva no banco de dados com o ID: {saved_id}")
         except Exception as db_error:
             print(f"Erro ao salvar no banco: {db_error}")
-        
-        return {"predicted_class": predicted_class, "tempo_resposta": tempo_resposta}
+        return {"predicted_class": predicted_class, "tempo_resposta": tempo_resposta, "saved_id": saved_id}
 
     except Exception as e:
         print(f"Erro ao processar o áudio: {e}")
