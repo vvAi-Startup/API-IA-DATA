@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import base64
-
+matplotlib.use('Agg')
 # Função para criar e salvar a imagem da forma de onda do áudio
 def create_waveform_image(file_path, output_dir='uploads/waveforms/'):
     # Garantir que o diretório de saída existe

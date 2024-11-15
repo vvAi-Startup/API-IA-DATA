@@ -2,6 +2,7 @@
 import librosa
 import numpy as np
 import matplotlib.pyplot as plt
+matplotlib.use('Agg')
 import os
 import base64
 
