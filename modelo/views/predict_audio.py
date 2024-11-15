@@ -6,13 +6,17 @@ from services.insert_data_service import save_prediction_to_db
 from .create_spectrogram_image import create_spectrogram_image
 from .create_waveform_image import create_waveform_image
 import time
+import base64
 
 # Rodando o modelo toda vez que api for iniciada
 model = tf.keras.models.load_model('./modelo/modelo_sirene_v1.0.1.h5')
 
+def audio_to_base64(file_path):
+    """Converte o arquivo de áudio para base64"""
+    with open(file_path, "rb") as audio_file:
+        return base64.b64encode(audio_file.read()).decode('utf-8')
+
 # Função para fazer previsões com o modelo carregado
-
-
 def predict_audio(file_path):
     try:
         if not file_path.lower().endswith(('.wav', '.mp3')):
@@ -20,8 +24,10 @@ def predict_audio(file_path):
 
         start_time = time.time()
 
-        spectrogram = audio_to_spectrogram(file_path)
+        # Converte o áudio em base64
+        audio_base64 = audio_to_base64(file_path)
 
+        spectrogram = audio_to_spectrogram(file_path)
         prediction = model.predict(spectrogram)
 
         end_time = time.time()
@@ -36,16 +42,16 @@ def predict_audio(file_path):
         waveform_path, waveform_base64 = create_waveform_image(file_path)
 
         # Simular vetor do áudio convertido (adapte para seu caso)
-        audio_vector = spectrogram.flatten().tolist()
+        # audio_vector = spectrogram.flatten().tolist()
 
         try:
             saved_id = save_prediction_to_db(
                 predicted_class,
                 tempo_resposta,
                 file_path.split('/')[-1],
+                audio_base64,
                 spectrogram_base64,
-                waveform_base64,
-                audio_vector
+                waveform_base64
                 )
 
             
