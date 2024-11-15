@@ -9,7 +9,7 @@ from bson import ObjectId
 ia_data_blue_print = Blueprint('ia_data', __name__)
 
 @ia_data_blue_print.route('/insert_audio', methods=['POST'])
-def insert_audio():
+async def insert_audio():
     # Verifique se um arquivo foi enviado
     if 'file' not in request.files:
         return jsonify({"error": "Nenhum arquivo enviado"}), 400
@@ -22,7 +22,7 @@ def insert_audio():
     
     try:
         # Passa o arquivo para a função de análise e processamento
-        analysis_results = open_file(file)
+        analysis_results = await open_file(file)
         print("Resultados da análise:", analysis_results)
         # Verifique se ocorreu algum erro na análise
         if "error" in analysis_results:
