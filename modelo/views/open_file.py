@@ -2,7 +2,7 @@ from .predict_audio import predict_audio
 import tempfile
 import os
 
-def open_file(file):
+async def open_file(file):
     """
     Função que recebe um arquivo de áudio enviado pelo frontend,
     faz a predição e gera as imagens do espectrograma e da forma de onda,
@@ -15,12 +15,11 @@ def open_file(file):
         file.save(file_path)
 
         # 1. Fazer a predição do áudio
-        result = predict_audio(file_path)
+        result = await predict_audio(file_path)
         
         if "error" in result:
             return result
         
-        # saved_id = result.get("saved_id")
 
         return {
             "predicted_class": result["predicted_class"],  # Classe prevista

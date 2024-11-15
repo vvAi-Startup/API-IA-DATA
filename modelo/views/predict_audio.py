@@ -65,6 +65,8 @@ async def predict_audio(file_path):
             "predicted_class": predicted_class,
             "tempo_resposta": tempo_resposta,
             "saved_id": saved_id,
+            "spectrogram": spectrogram_base64,
+            "waveform": waveform_base64
             }
 
     except Exception as e:
