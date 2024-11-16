@@ -42,9 +42,14 @@ def predict_audio(file_path):
         spectrogram_path, spectrogram_base64 = create_spectrogram_image(file_path)
         waveform_path, waveform_base64 = create_waveform_image(file_path)
      
+        if not spectrogram_base64:
+            print("Erro: Não foi possível gerar base64 para o espectrograma.")
+            return {"error": "Erro ao gerar spectrograma."}
 
-        # Simular vetor do áudio convertido (adapte para seu caso)
-        # audio_vector = spectrogram.flatten().tolist()
+        if not waveform_base64:
+            print("Erro: Não foi possível gerar base64 para o waveform.")
+            return {"error": "Erro ao gerar waveform."}
+       
 
         try:
             saved_id = save_prediction_to_db(
@@ -67,6 +72,7 @@ def predict_audio(file_path):
             "saved_id": saved_id,
             "spectrogram": spectrogram_base64,
             "waveform": waveform_base64,
+            "audio": audio_base64,
             }
 
     except Exception as e:
