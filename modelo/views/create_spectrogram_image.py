@@ -7,7 +7,6 @@ import base64
 
 # Função para criar e salvar a imagem do espectrograma
 
-
 def create_spectrogram_image(file_path, output_dir='uploads/spectrograms/'):
     try:
         # Garantir que o diretório de saída existe
