@@ -24,7 +24,7 @@ class IAData(me.Document):
                 "nome_audio": self.nome_audio,
                 "espectrograma": self.spectrograma_cripto,
                 "forma_de_onda": self.waveform_cripto,
-                "vetor_audio": self.vetor_audio
+                "audio": self.vetor_audio if self.vetor_audio else None
             }
     
     meta = {
