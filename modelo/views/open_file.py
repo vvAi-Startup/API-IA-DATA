@@ -25,9 +25,9 @@ def open_file(file):
             "predicted_class": result["predicted_class"],  # Classe prevista
             "tempo_resposta": result["tempo_resposta"],    # Tempo de resposta
             "saved_id": result["saved_id"],                # ID salvo no banco
-            "spectrogram_base64": result["spectrogram_base64"],  # Spectrograma em base64
-            "waveform_base64": result["waveform_base64"],        # Forma de onda em base64
-            "audio_vector": result["audio_vector"],
+            "spectrogram_base64": result["spectrogram"],  # Spectrograma em base64
+            "waveform_base64": result["waveform"],        # Forma de onda em base64
+            "audio_vector": result["audio"],
         }
         # return {
         #     "predicted_class": result,  # A predição do áudio
