@@ -7,6 +7,7 @@ from .create_spectrogram_image import create_spectrogram_image
 from .create_waveform_image import create_waveform_image
 import time
 import base64
+import os
 
 # Rodando o modelo toda vez que api for iniciada
 model = tf.keras.models.load_model('./modelo/modelo_sirene_v1.0.1.h5')
@@ -24,56 +25,60 @@ def predict_audio(file_path):
 
         start_time = time.time()
 
-        # Converte o áudio em base64
-        audio_base64 = audio_to_base64(file_path)
+        # Salvar o áudio em um local permanente com forward slash
+        audio_filename = f"audio_{int(time.time())}{os.path.splitext(file_path)[1]}"
+        audio_path = f"audios/{audio_filename}"  # Usando forward slash
+        
+        # Copiar o arquivo de áudio para a pasta uploads/audios
+        import shutil
+        shutil.copy2(file_path, os.path.join('uploads', 'audios', audio_filename))
 
         spectrogram = audio_to_spectrogram(file_path)
-
         prediction = model.predict(spectrogram)
 
         end_time = time.time()
         tempo_resposta = end_time - start_time
 
-        print(f'Predição bruta: {prediction}')  # Adicionado para depuração
         classes = ['ambulance', 'construction', 'dog', 'firetruck', 'traffic']
         predicted_class = classes[np.argmax(prediction)]
 
-        # Criar imagens e obter base64
-        spectrogram_path, spectrogram_base64 = create_spectrogram_image(file_path)
-        waveform_path, waveform_base64 = create_waveform_image(file_path)
+        # Criar imagens e obter caminhos
+        spectrogram_path = create_spectrogram_image(file_path)
+        waveform_path = create_waveform_image(file_path)
      
-        if not spectrogram_base64:
-            print("Erro: Não foi possível gerar base64 para o espectrograma.")
+        if not spectrogram_path:
             return {"error": "Erro ao gerar spectrograma."}
 
-        if not waveform_base64:
-            print("Erro: Não foi possível gerar base64 para o waveform.")
+        if not waveform_path:
             return {"error": "Erro ao gerar waveform."}
-       
+
+        # Converter os caminhos para usar forward slash
+        spectrogram_path = spectrogram_path.replace('\\', '/')
+        waveform_path = waveform_path.replace('\\', '/')
 
         try:
             saved_id = save_prediction_to_db(
                 predicted_class,
                 tempo_resposta,
-                file_path.split('/')[-1],
-                spectrogram_base64,
-                waveform_base64,
-                audio_base64,
-                )
-
+                os.path.basename(file_path),
+                spectrogram_path,
+                waveform_path,
+                audio_path
+            )
             
             print(f"Predição salva no banco de dados com o ID: {saved_id}")
         except Exception as db_error:
             print(f"Erro ao salvar no banco: {db_error}")
+            return {"error": str(db_error)}
 
         return {
             "predicted_class": predicted_class,
             "tempo_resposta": tempo_resposta,
             "saved_id": saved_id,
-            "spectrogram": spectrogram_base64,
-            "waveform": waveform_base64,
-            "audio": audio_base64,
-            }
+            "spectrogram": spectrogram_path,
+            "waveform": waveform_path,
+            "audio": audio_path
+        }
 
     except Exception as e:
         print(f"Erro ao processar o áudio: {e}")
