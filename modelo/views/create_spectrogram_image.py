@@ -12,6 +12,7 @@ import time
 
 
 def create_spectrogram_image(file_path, output_dir='spectrograms'):
+
     try:
         # Gerar nome único para o arquivo
         base_filename = os.path.splitext(os.path.basename(file_path))[0]

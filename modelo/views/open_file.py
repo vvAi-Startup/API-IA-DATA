@@ -19,7 +19,6 @@ def open_file(file):
         
         if "error" in result:
             return result
-        
 
         return {
             "predicted_class": result["predicted_class"],  # Classe prevista
@@ -29,14 +28,7 @@ def open_file(file):
             "waveform_base64": result["waveform"],        # Forma de onda em base64
             "audio_vector": result["audio"],
         }
-        # return {
-        #     "predicted_class": result,  # A predição do áudio
-        #     "tempo_resposta": result["tempo_resposta"],  # Tempo de resposta da predição
-        #     "saved_id": saved_id,  # ID do dado salvo no banco
-        #     "spectrogram": spectrogram_base64,  # Spectrograma em base64
-        #     # "waveform": waveform_base64  # Forma de onda em base64
-        # }
-
+    
     except Exception as e:
         # Retornar erro em caso de falha
         return {"error": str(e)}
