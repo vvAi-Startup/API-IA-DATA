@@ -5,7 +5,6 @@ import matplotlib
 matplotlib.use('Agg')  # Definir backend não-interativo
 import matplotlib.pyplot as plt
 import os
-import base64
 import time
 
 # Função para criar e salvar a imagem do espectrograma
